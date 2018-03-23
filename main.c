@@ -16,55 +16,14 @@ void main(void)
                       // threshold
     printf("\n\rKwantlen APSC1299 simple curve follower -- with error codes\n\r"); 
     ClrWdt();         // defined in <p18f4525.h>
-
-    threshold = 800u; // to change from default value
+    threshold = 700u; // to change from default value
                      // uncomment and change to any unsigned int <1024u -- most usually <512u
-
-    while(0)//robot to spin around one wheel
-    {
-        set_motor_speed(left, medium, 0);
-        set_motor_speed(right, stop, 0);
-    }
-    while(0)//robot to spin around in one spot
-    {
-        set_motor_speed(left, medium, 0);
-        set_motor_speed(right, rev_medium, 0);
-    }
     
-
-
-    while(1)
-    {
-        set_motor_speed(left, medium, 0);
-        set_motor_speed(right, slow, 0);
-        while(0)
-        {
-        for(int i =0; i != 1000; i++)
-            _delay(100000);
-        set_motor_speed(left, medium, 0);
-        set_motor_speed(right, medium, 0);
-        for(int i =0; i != 1000; i++)
-            _delay(100000);
-        set_motor_speed(left, slow, 0);
-        set_motor_speed(right, slow, 0);
-        for(int i =0; i != 1000; i++)
-            _delay(100000);
-        set_motor_speed(left, stop, 0);
-        set_motor_speed(right, stop, 0);
-        for(int i =0; i != 1000; i++)
-            _delay(100000);
-        set_motor_speed(left, rev_slow, 0);
-        set_motor_speed(right, rev_slow, 0);
-        for(int i =0; i != 1000; i++)
-            _delay(100000);
-        set_motor_speed(left, rev_medium, 0);
-        set_motor_speed(right, rev_medium, 0);
-        for(int i =0; i != 1000; i++)
-            _delay(100000);
-        set_motor_speed(left, rev_fast, 0);
-        set_motor_speed(right, rev_fast, 0);
-        }
-    }
+   // while(1)
+   // {
+   // set_motor_speed(left, rev_slow, 0);
+   // set_motor_speed(right,slow,0); 
+   // }
     while(1)
     {
         check_sensors();    // from sumovore.c
