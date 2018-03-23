@@ -1,7 +1,6 @@
 #include "sumovore.h"
 #include "motor_control.h"
 #include <xc.h>
-
 void follow_simple_curves(void);
 void spin_left(void);
 void turn_left(void);
