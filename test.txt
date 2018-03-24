@@ -1,1 +1,6 @@
-test
+cd /c
+cd git/
+cd apsc1299robot/
+git add test.txt (first time only)
+git commit -m "comment" test.txt
+git push -u origin master
