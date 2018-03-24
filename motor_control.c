@@ -12,7 +12,8 @@ void Left_Right_angle(void);
 void Right_Right_angle(void);
 void dead_end(void);
 void turn_around(void);
-
+void Left_acute_angle(void);
+void Right_acute_angle(void);
 
 void motor_control(void)
 {
@@ -39,6 +40,14 @@ void motor_control(void)
          case 0b00011u:
          case 0b01111u:
              Right_Right_angle();
+             break;
+         case 0b10100u:
+         case 0b10110u:
+             Left_acute_angle();
+             break;
+         case 0b01101u:
+         case 0b00101u:
+             Right_acute_angle();
              break;
         default:       break;
       } 
@@ -90,8 +99,6 @@ void Left_Right_angle(void)
     }
     set_motor_speed(left, slow, 0);
     set_motor_speed(right,slow,0);
-    //for(int i =0; i != 10; i++)
-       // _delay(100000);
     check_sensors();
     set_leds();
     while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b00110)&&(SeeLine.B!=0b01100))
@@ -107,11 +114,15 @@ void Left_Right_angle(void)
 
 void Right_Right_angle(void)
 {
+    while(SeeLine.B==0b00001||SeeLine.B==0b00111||SeeLine.B==0b00111||SeeLine.B==0b01011)
+    {
+        check_sensors();
+        set_leds();
+    }
     
     set_motor_speed(left, slow, 0);
     set_motor_speed(right,slow,0);
-    for(int i =0; i != 10; i++)
-        _delay(100000);
+       
     check_sensors();
     set_leds();
     while(SeeLine.B!=0b00100 &&SeeLine.B!=0b00110 && SeeLine.B!=0b01100)
@@ -161,4 +172,69 @@ void turn_around(void)
         set_motor_speed(right, slow, 0);
         set_motor_speed(left, rev_slow, 0);
     } 
+}
+
+void Left_acute_angle(void)
+{
+    while(SeeLine.B >= 0b10000)
+    {
+        check_sensors();
+        set_leds();
+    }
+    
+    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
+    TMR0IF = 0;
+    WriteTimer0(9286);
+    while(TMR0IF==0 )
+    {
+        check_sensors();
+        set_leds();   
+    }
+    if (SeeLine.B==0b01100||SeeLine.B==0b00100||SeeLine.B==0b00110||SeeLine.B==0b01110)
+        return;
+    
+    
+    while(SeeLine.B!=0b01100&&SeeLine.B!=0b00100&&SeeLine.B!=0b00110&&SeeLine.B!=0b01110)
+        {
+            check_sensors();
+            set_leds();   
+            set_motor_speed(right,medium,0);
+            set_motor_speed(left,rev_medium,0);
+        }
+            
+    
+    
+}
+
+void Right_acute_angle(void)
+{
+    while(SeeLine.B == 0b01111||SeeLine.B==0b00111||SeeLine.B==0b00101||SeeLine.B==0b00011||SeeLine.B==0b01101)
+    {
+        check_sensors();
+        set_leds();
+    }
+    
+    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
+    TMR0IF = 0;
+    WriteTimer0(9286);
+    while(TMR0IF==0
+            )
+    {
+        check_sensors();
+        set_leds();   
+    }
+    if (SeeLine.B==0b01100||SeeLine.B==0b00100||SeeLine.B==0b00110||SeeLine.B==0b01110)
+        return;
+    
+    
+    while(SeeLine.B!=0b01100&&SeeLine.B!=0b00100&&SeeLine.B!=0b00110&&SeeLine.B!=0b01110)
+        {
+            check_sensors();
+            set_leds();   
+            set_motor_speed(right,rev_medium,0);
+            set_motor_speed(left,medium,0);
+        }
+            
+    
+    
 }
