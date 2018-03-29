@@ -14,6 +14,8 @@ void dead_end(void);
 void turn_around(void);
 void Left_acute_angle(void);
 void Right_acute_angle(void);
+void Track_End(void);
+
 
 void motor_control(void)
 {
@@ -28,7 +30,7 @@ void motor_control(void)
                        //no breaks all above readings end up here
                        follow_simple_curves();
                        break;
-        case 0b00000u:
+       case 0b00000u:
                        dead_end();
                        break;
          case 0b11100u:
@@ -49,7 +51,11 @@ void motor_control(void)
          case 0b00101u:
              Right_acute_angle();
              break;
-        default:       break;
+        case 0b11111u:
+            Track_End();
+             break;
+         
+         default:       break;
       } 
 }
 
@@ -64,74 +70,80 @@ void follow_simple_curves(void)
 
 void spin_left(void)
 {
-  set_motor_speed(left, rev_fast, 0); 
-  set_motor_speed(right, fast, 0); 
+  set_motor_speed(left, rev_medium, 0); 
+  set_motor_speed(right, medium, 0); 
 }
 
 void turn_left(void)
 {
   set_motor_speed(left, stop, 0); 
-  set_motor_speed(right, fast, 0); 
+  set_motor_speed(right, medium, 0); 
 }
 void straight_fwd(void)
 {
-  set_motor_speed(left, fast, 0); 
-  set_motor_speed(right, fast, 0); 
+  set_motor_speed(left, medium, 0); 
+  set_motor_speed(right, medium, 0); 
 }
 void spin_right(void)
 {
-  set_motor_speed(left, fast, 0); 
-  set_motor_speed(right, rev_fast, 0); 
+  set_motor_speed(left, medium, 0); 
+  set_motor_speed(right, rev_medium, 0); 
 }
 void turn_right(void)
 {
-  set_motor_speed(left, fast, 0); 
+  set_motor_speed(left, medium, 0); 
   set_motor_speed(right, stop, 0); 
 }
 
 
 void Left_Right_angle(void)
 {
-    while(SeeLine.B >= 0b10000)
-    {
-        check_sensors();
-        set_leds();
-    }
-    set_motor_speed(left, slow, 0);
+      set_motor_speed(left, slow, 0);
     set_motor_speed(right,slow,0);
     check_sensors();
     set_leds();
-    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b00110)&&(SeeLine.B!=0b01100))
+    
+    for(int i =0; i!=10;i++)
+        _delay(100000);
+    
+    check_sensors();
+    set_leds();
+    if(SeeLine.B == 0)
     {
-    set_motor_speed(left, rev_slow, 0);
-    set_motor_speed(right,slow,0); 
+    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b01100))
+    {
+    set_motor_speed(left, rev_fast, 0);
+    set_motor_speed(right, fast,0); 
     check_sensors();
     set_leds();
     }
+    }   
     
     
 }
 
 void Right_Right_angle(void)
 {
-    while(SeeLine.B==0b00001||SeeLine.B==0b00111||SeeLine.B==0b00111||SeeLine.B==0b01011)
-    {
-        check_sensors();
-        set_leds();
-    }
-    
     set_motor_speed(left, slow, 0);
     set_motor_speed(right,slow,0);
-       
     check_sensors();
     set_leds();
-    while(SeeLine.B!=0b00100 &&SeeLine.B!=0b00110 && SeeLine.B!=0b01100)
+    
+    for(int i =0; i!=10;i++)
+        _delay(100000);
+    
+    check_sensors();
+    set_leds();
+    if(SeeLine.B == 0)
     {
-    set_motor_speed(left, slow, 0);
-    set_motor_speed(right,rev_slow,0); 
+    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b00110))
+    {
+    set_motor_speed(left, fast, 0);
+    set_motor_speed(right, rev_fast,0); 
     check_sensors();
     set_leds();
     }
+    }   
     
     
 }
@@ -181,7 +193,8 @@ void Left_acute_angle(void)
         check_sensors();
         set_leds();
     }
-    
+    set_motor_speed(right, slow, 0);
+        set_motor_speed(left, slow, 0);
     OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
     WriteTimer0(9286);
@@ -213,7 +226,8 @@ void Right_acute_angle(void)
         check_sensors();
         set_leds();
     }
-    
+    set_motor_speed(right, slow, 0);
+        set_motor_speed(left, slow, 0);
     OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
     WriteTimer0(9286);
@@ -234,7 +248,48 @@ void Right_acute_angle(void)
             set_motor_speed(right,rev_medium,0);
             set_motor_speed(left,medium,0);
         }
-            
+}          
+  void Track_End(void)
+{
+  set_motor_speed(left, slow, 0);
+    set_motor_speed(right,slow,0);
+    check_sensors();
+    set_leds();
+   
+    for(int i =0; i!=10;i++)
+        _delay(100000);
+    
+    check_sensors();
+    set_leds();
+    if (SeeLine.B==0b11111)
+    {
+     set_motor_speed(left, stop, 0);
+    set_motor_speed(right,stop,0);
+    while(SeeLine.B==0b11111)
+        check_sensors();
+    }
     
     
 }
+  
+  
+//Left right angle backup code
+//set_motor_speed(left, slow, 0);
+   // set_motor_speed(right,slow,0);
+    //while(SeeLine.B!=0b00000&&SeeLine.B!=0b00100&&SeeLine.B!=0b00110&&SeeLine.B!=0b01100)
+    //{
+   //     check_sensors();
+//        set_leds();
+  //  }
+   // _delay(100000);
+   // set_motor_speed(left, slow, 0);
+   // set_motor_speed(right,slow,0);
+   // check_sensors();
+    //set_leds();
+    //while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b00110)&&(SeeLine.B!=0b01100))
+    //{
+    //set_motor_speed(left, rev_slow, 0);
+    //set_motor_speed(right,slow,0); 
+    //check_sensors();
+    //set_leds();
+   // }
