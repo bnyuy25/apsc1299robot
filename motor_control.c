@@ -70,14 +70,14 @@ void follow_simple_curves(void)
 
 void spin_left(void)
 {
-  set_motor_speed(left, rev_medium, 0); 
-  set_motor_speed(right, medium, 0); 
+  set_motor_speed(left, rev_fast, 0); 
+  set_motor_speed(right, fast, 0); 
 }
 
 void turn_left(void)
 {
   set_motor_speed(left, stop, 0); 
-  set_motor_speed(right, medium, 0); 
+  set_motor_speed(right, fast, 0); 
 }
 void straight_fwd(void)
 {
@@ -86,24 +86,24 @@ void straight_fwd(void)
 }
 void spin_right(void)
 {
-  set_motor_speed(left, medium, 0); 
-  set_motor_speed(right, rev_medium, 0); 
+  set_motor_speed(left, fast, 0); 
+  set_motor_speed(right, rev_fast, 0); 
 }
 void turn_right(void)
 {
-  set_motor_speed(left, medium, 0); 
+  set_motor_speed(left, fast, 0); 
   set_motor_speed(right, stop, 0); 
 }
 
 
 void Left_Right_angle(void)
 {
-      set_motor_speed(left, slow, 0);
+    set_motor_speed(left, slow, 0);
     set_motor_speed(right,slow,0);
     check_sensors();
     set_leds();
     
-    for(int i =0; i!=10;i++)
+    for(int i =0; i!=15;i++)
         _delay(100000);
     
     check_sensors();
@@ -129,7 +129,7 @@ void Right_Right_angle(void)
     check_sensors();
     set_leds();
     
-    for(int i =0; i!=10;i++)
+    for(int i =0; i!=15;i++)
         _delay(100000);
     
     check_sensors();
@@ -193,9 +193,9 @@ void Left_acute_angle(void)
         check_sensors();
         set_leds();
     }
-    set_motor_speed(right, slow, 0);
-        set_motor_speed(left, slow, 0);
-    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
+    set_motor_speed(right, medium, 0);
+        set_motor_speed(left, medium, 0);
+    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_256); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
     WriteTimer0(9286);
     while(TMR0IF==0 )
@@ -226,9 +226,9 @@ void Right_acute_angle(void)
         check_sensors();
         set_leds();
     }
-    set_motor_speed(right, slow, 0);
-        set_motor_speed(left, slow, 0);
-    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
+    set_motor_speed(right, medium, 0);
+        set_motor_speed(left, medium, 0);
+    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_32); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
     WriteTimer0(9286);
     while(TMR0IF==0
@@ -256,7 +256,7 @@ void Right_acute_angle(void)
     check_sensors();
     set_leds();
    
-    for(int i =0; i!=10;i++)
+    for(int i =0; i!=23;i++)
         _delay(100000);
     
     check_sensors();
