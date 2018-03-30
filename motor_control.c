@@ -143,9 +143,7 @@ void Right_Right_angle(void)
     check_sensors();
     set_leds();
     }
-    }   
-    
-    
+    }      
 }
 void dead_end(void)
 {
@@ -191,7 +189,8 @@ void Left_acute_angle(void)
     while(SeeLine.B >= 0b10000)
     {
         check_sensors();
-        set_leds();
+        set_leds();               //can we like function call follow simple curves and SLB - 0b100000
+        //to like make sure it follows the line in the case of close tracks
     }
     set_motor_speed(right, medium, 0);
         set_motor_speed(left, medium, 0);
@@ -205,9 +204,10 @@ void Left_acute_angle(void)
     }
     if (SeeLine.B==0b01100||SeeLine.B==0b00100||SeeLine.B==0b00110||SeeLine.B==0b01110)
         return;
+   //need to have more triggers for returning?? UNSURE PLZ CONFIRM
     
     
-    while(SeeLine.B!=0b01100&&SeeLine.B!=0b00100&&SeeLine.B!=0b00110&&SeeLine.B!=0b01110)
+    while(SeeLine.B!=0b01100&&SeeLine.B!=0b00100&&SeeLine.B!=0b00110&&SeeLine.B!=0b01110) //in the case of close tracks its gonna be 0b00101 for a longer period of time
         {
             check_sensors();
             set_leds();   
@@ -219,35 +219,41 @@ void Left_acute_angle(void)
     
 }
 
-void Right_acute_angle(void)
+void Right_acute_angle(void)//the problem is that during 2 close tracks, it will go into the code, then stay in the first loop and just go straight from follow simple curves
 {
-    while(SeeLine.B == 0b01111||SeeLine.B==0b00111||SeeLine.B==0b00101||SeeLine.B==0b00011||SeeLine.B==0b01101)
+    while(SeeLine.B == 0b01111||SeeLine.B==0b00111||SeeLine.B==0b00101||SeeLine.B==0b00011||SeeLine.B==0b01101)//while(SLB %2 ==1)?
     {
         check_sensors();
-        set_leds();
+        set_leds(); //need a SLB-1 follow simple curves 
     }
     set_motor_speed(right, medium, 0);
-        set_motor_speed(left, medium, 0);
+    set_motor_speed(left, medium, 0);
     OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_32); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
     WriteTimer0(9286);
-    while(TMR0IF==0
-            )
+    while(TMR0IF==0)
     {
         check_sensors();
         set_leds();   
     }
     if (SeeLine.B==0b01100||SeeLine.B==0b00100||SeeLine.B==0b00110||SeeLine.B==0b01110)
         return;
+    //may need more triggers????
     
-    
-    while(SeeLine.B!=0b01100&&SeeLine.B!=0b00100&&SeeLine.B!=0b00110&&SeeLine.B!=0b01110)
+    while(SeeLine.B!= 0b00100 && SeeLine.B!= 0b01110 &&SeeLine.B!= 0b00110)
         {
             check_sensors();
             set_leds();   
             set_motor_speed(right,rev_medium,0);
             set_motor_speed(left,medium,0);
         }
+    //while loop until SLB is not 01111 || 0b00111|| 0b00101 || 0b00011 || 0b01101
+    //motor speed medium
+    //set a timer for 5cm? ish of distances, delat until finished
+    //if middle-ish on line exit
+    //while middle bit not on line turn in place
+    
+    
 }          
   void Track_End(void)
 {
@@ -256,7 +262,7 @@ void Right_acute_angle(void)
     check_sensors();
     set_leds();
    
-    for(int i =0; i!=23;i++)
+    for(int i =0; i!=23;i++) //needs to be bigger
         _delay(100000);
     
     check_sensors();
