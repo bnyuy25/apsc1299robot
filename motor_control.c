@@ -16,7 +16,7 @@ void Left_acute_angle(void);
 void Right_acute_angle(void);
 void Track_End(void);
 
-
+int x = 14000;//timer for both acute angles, decrease this value is acute angles are super thick
 void motor_control(void)
 {
      // very simple motor control
@@ -34,12 +34,10 @@ void motor_control(void)
                        dead_end();
                        break;
          case 0b11100u:
-         case 0b11000u:
          case 0b11110u:
              Left_Right_angle();
              break;
          case 0b00111u:
-         case 0b00011u:
          case 0b01111u:
              Right_Right_angle();
              break;
@@ -82,7 +80,7 @@ void turn_left(void)
 void straight_fwd(void)
 {
   set_motor_speed(left, medium, 0); 
-  set_motor_speed(right, medium, 0); 
+  set_motor_speed(right, medium, 1); 
 }
 void spin_right(void)
 {
@@ -110,7 +108,7 @@ void Left_Right_angle(void)
     set_leds();
     if(SeeLine.B == 0)
     {
-    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b01100))
+    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b00110))
     {
     set_motor_speed(left, rev_fast, 0);
     set_motor_speed(right, fast,0); 
@@ -136,7 +134,7 @@ void Right_Right_angle(void)
     set_leds();
     if(SeeLine.B == 0)
     {
-    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b00110))
+    while((SeeLine.B!=0b00100)&&(SeeLine.B!=0b01100))
     {
     set_motor_speed(left, fast, 0);
     set_motor_speed(right, rev_fast,0); 
@@ -194,9 +192,9 @@ void Left_acute_angle(void)
     }
     set_motor_speed(right, medium, 0);
         set_motor_speed(left, medium, 0);
-    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_256); //using prescale 64 because we want 5 cmish worth of distances
+    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
-    WriteTimer0(9286);
+    WriteTimer0(x); //((2^16-28036) *64* 125*10^-9 = 0.35 // 21786
     while(TMR0IF==0 )
     {
         check_sensors();
@@ -228,9 +226,9 @@ void Right_acute_angle(void)//the problem is that during 2 close tracks, it will
     }
     set_motor_speed(right, medium, 0);
     set_motor_speed(left, medium, 0);
-    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_32); //using prescale 64 because we want 5 cmish worth of distances
+    OpenTimer0(TIMER_INT_OFF & T0_SOURCE_INT & T0_16BIT & T0_PS_1_64); //using prescale 64 because we want 5 cmish worth of distances
     TMR0IF = 0;
-    WriteTimer0(9286);
+    WriteTimer0(x); //((2^16-28036) *64* 125*10^-9 = 2^16- 0.5/64/125/10^-9
     while(TMR0IF==0)
     {
         check_sensors();
@@ -262,7 +260,7 @@ void Right_acute_angle(void)//the problem is that during 2 close tracks, it will
     check_sensors();
     set_leds();
    
-    for(int i =0; i!=23;i++) //needs to be bigger
+    for(int i =0; i!=25;i++) //needs to be bigger
         _delay(100000);
     
     check_sensors();
@@ -299,3 +297,10 @@ void Right_acute_angle(void)//the problem is that during 2 close tracks, it will
     //check_sensors();
     //set_leds();
    // }
+  
+  
+  
+  //
+  //line 199 and 233 timer values of acute angles may need to increase delay based on corner thickness
+  
+//may need to change threshold
