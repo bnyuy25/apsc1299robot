@@ -16,7 +16,7 @@ void main(void)
                       // threshold
     printf("\n\rKwantlen APSC1299 simple curve follower -- with error codes\n\r"); 
     ClrWdt();         // defined in <p18f4525.h>
-    threshold = 800u; // to change from default value
+    threshold = 775u; // to change from default value
                      // uncomment and change to any unsigned int <1024u -- most usually <512u
     
    // while(1)
