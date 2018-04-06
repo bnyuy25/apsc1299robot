@@ -19,20 +19,37 @@ void Track_End(void);
 int x = 14000;//timer for both acute angles, decrease this value is acute angles are super thick
 void motor_control(void)
 {
-     // very simple motor control
+    
      switch(SeeLine.B)
      {
+        case 0b00001u:
+            _delay(100000);
+            _delay(100000);
+            _delay(100000);
+            turn_left();
+            break;
+        case 0b10000u:
+                        _delay(100000);
+            _delay(100000);
+            _delay(100000);
+
+            turn_right();
+            break;          
         case 0b00100u:
         case 0b00010u:
         case 0b01000u:
-        case 0b00001u:
-        case 0b10000u:
-                       //no breaks all above readings end up here
+                        //no breaks all above readings end up here
                        follow_simple_curves();
                        break;
        case 0b00000u:
                        dead_end();
                        break;
+         case 0b01100u:
+             spin_left();
+             break;
+         case 0b000110u:
+             spin_right();
+             break;
          case 0b11100u:
          case 0b11110u:
              Left_Right_angle();
@@ -52,8 +69,7 @@ void motor_control(void)
         case 0b11111u:
             Track_End();
              break;
-         
-         default:       break;
+        default:       break;
       } 
 }
 
@@ -68,14 +84,14 @@ void follow_simple_curves(void)
 
 void spin_left(void)
 {
-  set_motor_speed(left, rev_fast, 0); 
-  set_motor_speed(right, fast, 0); 
+  set_motor_speed(left, rev_slow, 0); 
+  set_motor_speed(right, slow, 0); 
 }
 
 void turn_left(void)
 {
   set_motor_speed(left, stop, 0); 
-  set_motor_speed(right, fast, 0); 
+  set_motor_speed(right, slow, 0); 
 }
 void straight_fwd(void)
 {
@@ -84,23 +100,20 @@ void straight_fwd(void)
 }
 void spin_right(void)
 {
-  set_motor_speed(left, fast, 0); 
-  set_motor_speed(right, rev_fast, 0); 
+  set_motor_speed(left, slow, 0); 
+  set_motor_speed(right, rev_slow, 0); 
 }
 void turn_right(void)
 {
-  set_motor_speed(left, fast, 0); 
+  set_motor_speed(left, slow, 0); 
   set_motor_speed(right, stop, 0); 
 }
-
-
 void Left_Right_angle(void)
 {
     set_motor_speed(left, slow, 0);
     set_motor_speed(right,slow,0);
     check_sensors();
     set_leds();
-    
     for(int i =0; i!=15;i++)
         _delay(100000);
     
@@ -115,9 +128,7 @@ void Left_Right_angle(void)
     check_sensors();
     set_leds();
     }
-    }   
-    
-    
+    }    
 }
 
 void Right_Right_angle(void)
@@ -263,6 +274,7 @@ void Right_acute_angle(void)//the problem is that during 2 close tracks, it will
     for(int i =0; i!=25;i++) //needs to be bigger
         _delay(100000);
     
+    
     check_sensors();
     set_leds();
     if (SeeLine.B==0b11111)
@@ -275,6 +287,8 @@ void Right_acute_angle(void)//the problem is that during 2 close tracks, it will
     
     
 }
+  
+//  may need to return on track end delay
   
   
 //Left right angle backup code
@@ -298,9 +312,4 @@ void Right_acute_angle(void)//the problem is that during 2 close tracks, it will
     //set_leds();
    // }
   
-  
-  
-  //
-  //line 199 and 233 timer values of acute angles may need to increase delay based on corner thickness
-  
-//may need to change threshold
+  //may need to change threshold
